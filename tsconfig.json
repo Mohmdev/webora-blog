@@ -1,56 +1,66 @@
 {
-  "compilerOptions": {
-    /* Strictness */
-    "strict": true,
-    "noUncheckedIndexedAccess": true,
-    "noImplicitOverride": true,
-    
-    "baseUrl": ".",
-    "esModuleInterop": true,
-    "target": "ES2022",
-    "lib": [
-      "DOM",
-      "DOM.Iterable",
-      "ES2022"
-    ],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "strictNullChecks": true,
-    "forceConsistentCasingInFileNames": true,
-    "noEmit": true,
-    "incremental": true,
-    "jsx": "preserve",
-    "module": "esnext",
-    "moduleResolution": "bundler",
-    "resolveJsonModule": true,
-    "sourceMap": true,
-    "isolatedModules": true,
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ],
-    "paths": {
-      "@payload-config": [
-        "./src/payload.config.ts"
-      ],
-      "react": [
-        "./node_modules/@types/react"
-      ],
-      "@/*": [
-        "./src/*"
-      ],
-    }
-  },
-  "include": [
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts",
-    "redirects.js",
-    "next.config.js",
-    "next-sitemap.config.cjs"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+	"compilerOptions": {
+		"strict": true,
+		"noUncheckedIndexedAccess": true,
+		"noImplicitOverride": true,
+		"esModuleInterop": true,
+		"target": "ES2024",
+		"lib": ["DOM", "DOM.Iterable", "ES2024"],
+		"allowJs": true,
+		"skipLibCheck": true,
+		"strictNullChecks": true,
+		"forceConsistentCasingInFileNames": true,
+		"noEmit": true,
+		"incremental": true,
+		"jsx": "preserve",
+		"module": "esnext",
+		"moduleResolution": "bundler",
+		"resolveJsonModule": true,
+		"sourceMap": true,
+		"isolatedModules": true,
+		"plugins": [
+			{
+				"name": "next"
+			}
+		],
+		"baseUrl": ".",
+		"paths": {
+			"react": ["node_modules/@types/react"],
+			"@payload-config": ["src/payload.config.ts"],
+			"@payload-types": ["src/payload-types.ts"],
+			"@CMS/*": ["src/CMS/*"],
+			"@auth/*": ["src/services/authentication/*"],
+			"@data/*": ["src/_data/*"],
+			"@providers": ["src/providers"],
+			"@providers/*": ["src/providers/*"],
+			"@forms/*": ["src/forms/*"],
+			"@blocks/*": ["src/CMS/blocks/*"],
+			"@heros/*": ["src/CMS/heros/*"],
+			"@fields/*": ["src/CMS/fields/*"],
+			"@ui/*": ["src/components/ui/*"],
+			"@components/*": ["src/components/*"],
+			"@scss/*": ["src/styles/scss/*"],
+			"@styles/*": ["src/styles/*"],
+			"@services/*": ["src/services/*"],
+			"@icons": ["src/lib/icons"],
+			"@utils/*": ["src/utils/*"],
+			"@hooks/*": ["src/hooks/*"],
+			"@constants/*": ["src/constants/*"],
+			"@lib/*": ["src/lib/*"],
+			"@/*": ["src/*"]
+		}
+	},
+	"include": [
+		"**/*.ts",
+		"**/*.tsx",
+		"next-env.d.ts",
+		"src/environment.d.ts",
+		".next/types/**/*.ts",
+		"redirects.cjs",
+		"next.config.ts",
+		"next-sitemap.config.cjs",
+		"public/scripts/*.ts",
+		"public/scripts/*.js"
+	],
+	"exclude": ["node_modules", ".temp"]
 }
