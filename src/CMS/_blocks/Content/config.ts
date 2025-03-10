@@ -6,6 +6,7 @@ import {
   lexicalEditor,
 } from '@payloadcms/richtext-lexical'
 import { link } from '@fields/link'
+import { isSiblingTruthy } from '@utils/siblingFieldCondition'
 
 const columnFields: Field[] = [
   {
@@ -53,9 +54,7 @@ const columnFields: Field[] = [
   link({
     overrides: {
       admin: {
-        condition: (_data, siblingData) => {
-          return Boolean(siblingData?.enableLink)
-        },
+        condition: isSiblingTruthy('enableLink'),
       },
     },
   }),

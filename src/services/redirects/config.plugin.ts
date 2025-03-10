@@ -26,7 +26,7 @@ export const redirectsPluginConfig: Plugin = redirectsPlugin({
       afterChange: [revalidateRedirects],
     },
     admin: {
-      group: 'Design',
+      group: 'Tools',
     },
   },
 })

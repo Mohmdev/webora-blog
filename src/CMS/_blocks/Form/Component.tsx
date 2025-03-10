@@ -5,14 +5,13 @@ import type {
 } from "@payloadcms/plugin-form-builder/types";
 
 import RichText from "@/components/RichText";
-import { Button } from "@/components/ui/button";
+import { CMSButton } from "@components/CMSButton";
 import type { SerializedEditorState } from "@payloadcms/richtext-lexical/lexical";
 import { useRouter } from "next/navigation";
 import type React from "react";
 import { useCallback, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-
-import { getClientSideURL } from "@utils/getURL";
+import { getClientSideURL } from "@data/getURL";
 import { fields } from "./fields";
 
 export type FormBlockType = {
@@ -173,9 +172,9 @@ export const FormBlock: React.FC<
 									})}
 							</div>
 
-							<Button form={formID} type="submit" variant="default">
+							<CMSButton form={formID} type="submit" variant="default">
 								{submitButtonLabel}
-							</Button>
+							</CMSButton>
 						</form>
 					)}
 				</FormProvider>

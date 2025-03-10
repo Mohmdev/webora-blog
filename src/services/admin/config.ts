@@ -30,8 +30,9 @@ export const adminConfig: Config['admin'] = {
     // beforeDashboard: ['@admin-components/BeforeDashboard']
   },
   meta: {
+    title: 'Webora Blog Admin Dashboard',
     description:
-      'Webora Estates Admin Dashboard - Property Management Platform',
+      'Create, edit, and manage content',
     icons: [
       {
         rel: 'icon',
@@ -51,9 +52,9 @@ export const adminConfig: Config['admin'] = {
     ],
     // you share links to your admin panel online and through social media.
     openGraph: {
-      title: 'Webora Estates Admin Dashboard',
+      title: 'Webora Blog Admin Dashboard',
       description:
-        'Enterprise real estate management platform for property professionals. Manage listings, tenants, and operations.',
+        'Create, edit, and manage content',
       images: [
         {
           height: 600,
@@ -63,7 +64,7 @@ export const adminConfig: Config['admin'] = {
       ],
     },
     // Text that appends the meta/page title displayed in the browser tab.
-    titleSuffix: '| Webora Estates',
+    titleSuffix: '| Webora Blog',
   },
   importMap: {
     baseDir: path.resolve(dirname),

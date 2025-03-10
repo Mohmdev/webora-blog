@@ -34,8 +34,9 @@ export const WeboraRectangleSVG: React.FC<Props> = () => {
       <div className="logoWrapper">
         <WeboraSVG />
       </div>
-      <div className="textWrapper">
-        <span className="textMain">Webora Estates</span>
+      <div className="textWrapper relative">
+        <span className="textMain">Webora Blog</span>
+        <span className="absolute right-0 bottom-[-1.5rem] text-xs text-muted">v1.1.0-beta.2</span>
       </div>
     </div>
   )

@@ -1,17 +1,62 @@
 import type { Metadata } from "next";
-
-import { PayloadRedirects } from "@/components/PayloadRedirects";
-import { homeStatic } from "@/endpoints/seed/home-static";
+import { PayloadRedirects } from "@components/PayloadRedirects";
 import configPromise from "@payload-config";
 import { draftMode } from "next/headers";
-import { type RequiredDataFromCollectionSlug, getPayload } from "payload";
-import React, { cache } from "react";
-
-import { RenderBlocks } from "@/blocks/RenderBlocks";
+import {  getPayload } from "payload";
+import React from "react";
 import { LivePreviewListener } from "@/components/LivePreviewListener";
 import { RenderHero } from "@CMS/_heros/RenderHero";
-import { generateMeta } from "@utils/generateMeta";
 import PageClient from "./page.client";
+import { getPageBySlug } from "@data/getPage";
+import { Page as PageType } from "@payload-types"
+import { getDynamicMeta } from "@data/getDynamicMeta";
+import { generateMeta } from "@services/seo/generateMeta";
+import { homeStatic } from "@services/seed/general-site-data/home/home-static";
+import { RenderBlocks } from "@blocks/RenderBlocks";
+
+
+type Args = {
+	params: Promise<{
+		slug?: string;
+	}>;
+};
+
+export default async function Page({ params: paramsPromise }: Args) {
+	const { isEnabled: draft } = await draftMode();
+	const { slug = "home" } = await paramsPromise;
+	const url = "/" + slug;
+
+	  let page: Partial<PageType> | null
+
+	page = await getPageBySlug({
+		slug,
+	});
+
+	// Remove this code once your website is seeded
+	if (!page && slug === "home") {
+		page = homeStatic;
+	}
+
+	if (!page) {
+		return <PayloadRedirects url={url} />;
+	}
+
+	const hero = page.hero || { type: 'none' }
+	const blocks = page.blocks || []
+
+	return (
+		<article className="pt-16 pb-24">
+			<PageClient />
+			{/* Allows redirects for valid pages too */}
+			<PayloadRedirects disableNotFound url={url} />
+
+			{draft && <LivePreviewListener />}
+
+			<RenderHero {...hero} />
+			<RenderBlocks blocks={blocks} />
+		</article>
+	);
+}
 
 export async function generateStaticParams() {
 	const payload = await getPayload({ config: configPromise });
@@ -37,76 +82,30 @@ export async function generateStaticParams() {
 	return params;
 }
 
-type Args = {
-	params: Promise<{
-		slug?: string;
-	}>;
-};
-
-export default async function Page({ params: paramsPromise }: Args) {
-	const { isEnabled: draft } = await draftMode();
-	const { slug = "home" } = await paramsPromise;
-	const url = "/" + slug;
-
-	let page: RequiredDataFromCollectionSlug<"pages"> | null;
-
-	page = await queryPageBySlug({
-		slug,
-	});
-
-	// Remove this code once your website is seeded
-	if (!page && slug === "home") {
-		page = homeStatic;
-	}
-
-	if (!page) {
-		return <PayloadRedirects url={url} />;
-	}
-
-	const { hero, layout } = page;
-
-	return (
-		<article className="pt-16 pb-24">
-			<PageClient />
-			{/* Allows redirects for valid pages too */}
-			<PayloadRedirects disableNotFound url={url} />
-
-			{draft && <LivePreviewListener />}
-
-			<RenderHero {...hero} />
-			<RenderBlocks blocks={layout} />
-		</article>
-	);
-}
-
 export async function generateMetadata({
-	params: paramsPromise,
+  params: paramsPromise,
 }: Args): Promise<Metadata> {
-	const { slug = "home" } = await paramsPromise;
-	const page = await queryPageBySlug({
-		slug,
-	});
+  const { slug = 'home' } = await paramsPromise
 
-	return generateMeta({ doc: page });
+  let page: Partial<PageType> | null = await getPageBySlug({ slug })
+
+  // Handle homepage case
+  if (!page && slug === 'home') {
+    page = homeStatic
+  }
+
+  // Handle 404 case
+  if (!page) {
+    const { siteName, siteDescription } = await getDynamicMeta()
+    return {
+      title: `Not Found | ${siteName}`,
+      description: siteDescription,
+      robots: {
+        index: false,
+        follow: false,
+      },
+    }
+  }
+
+  return generateMeta({ doc: page })
 }
-
-const queryPageBySlug = cache(async ({ slug }: { slug: string }) => {
-	const { isEnabled: draft } = await draftMode();
-
-	const payload = await getPayload({ config: configPromise });
-
-	const result = await payload.find({
-		collection: "pages",
-		draft,
-		limit: 1,
-		pagination: false,
-		overrideAccess: draft,
-		where: {
-			slug: {
-				equals: slug,
-			},
-		},
-	});
-
-	return result.docs?.[0] || null;
-});

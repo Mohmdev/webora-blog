@@ -4,16 +4,15 @@ import type {
 	PayloadAdminBarProps,
 	PayloadMeUser,
 } from "@payloadcms/admin-bar";
-
 import { PayloadAdminBar } from "@payloadcms/admin-bar";
 import { cn } from "@utils/ui";
 import { useSelectedLayoutSegments } from "next/navigation";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
+import { getClientSideURL } from "@data/getURL";
 
 import "./index.scss";
 
-import { getClientSideURL } from "@utils/getURL";
 
 const baseClass = "admin-bar";
 

@@ -10,10 +10,10 @@ export const mergeOpenGraph = async (
     siteName: string
     description: string
   } = {
-    siteName: 'Webora Estates - Property Management Platform',
-    description:
-      'Enterprise-grade real estate management platform for property listings, tenant management, and portfolio operations.',
-  },
+      siteName: 'Webora Blog - Content Management Platform',
+      description:
+        'Enterprise-grade Blog and Content Management Platform for developers and content creators.',
+    },
 ): Promise<Metadata['openGraph']> => {
   const { siteName, siteDescription } = await getDynamicMeta()
 

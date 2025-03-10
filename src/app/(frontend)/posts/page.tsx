@@ -1,31 +1,20 @@
 import type { Metadata } from 'next/types'
-
 import { CollectionArchive } from '@/components/CollectionArchive'
 import { PageRange } from '@/components/PageRange'
 import { Pagination } from '@/components/Pagination'
-import configPromise from '@payload-config'
-import { getPayload } from 'payload'
 import React from 'react'
 import PageClient from './page.client'
+import { getDynamicMeta } from '@data/getDynamicMeta'
+import { mergeOpenGraph } from '@services/seo/mergeOpenGraph'
+import { getPaginatedPosts } from '@data/getPost'
+import type { CardPostData } from '@components/Card'
 
 export const dynamic = 'force-static'
 export const revalidate = 600
 
 export default async function Page() {
-  const payload = await getPayload({ config: configPromise })
-
-  const posts = await payload.find({
-    collection: 'posts',
-    depth: 1,
-    limit: 12,
-    overrideAccess: false,
-    select: {
-      title: true,
-      slug: true,
-      categories: true,
-      meta: true,
-    },
-  })
+ const posts = await getPaginatedPosts()
+  const { docs, totalDocs, totalPages, page } = posts
 
   return (
     <div className="pt-24 pb-24">
@@ -39,25 +28,44 @@ export default async function Page() {
       <div className="container mb-8">
         <PageRange
           collection="posts"
-          currentPage={posts.page}
+          currentPage={page}
           limit={12}
-          totalDocs={posts.totalDocs}
+          totalDocs={totalDocs}
         />
       </div>
 
-      <CollectionArchive posts={posts.docs} />
+      {totalDocs > 0 ? (
+        <CollectionArchive posts={docs as CardPostData[]} />
+      ) : (
+        <p className="text-sm text-muted-foreground prose">Blog is empty.</p>
+      )}
 
       <div className="container">
-        {posts.totalPages > 1 && posts.page && (
-          <Pagination page={posts.page} totalPages={posts.totalPages} />
+        {totalPages > 1 && page && (
+          <Pagination page={page} totalPages={totalPages} />
         )}
       </div>
     </div>
   )
 }
 
-export function generateMetadata(): Metadata {
+export async function generateMetadata(): Promise<Metadata> {
+  const { siteName, siteDescription } = await getDynamicMeta()
+  const title = `Posts | ${siteName}`
+
   return {
-    title: `Payload Website Template Posts`,
+    title,
+    description: siteDescription,
+    openGraph: await mergeOpenGraph(
+      {
+        title,
+        description: siteDescription,
+        url: '/posts',
+      },
+      {
+        siteName,
+        description: siteDescription,
+      },
+    ),
   }
 }

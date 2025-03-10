@@ -29,10 +29,10 @@ export const getDynamicMeta = async (): Promise<DynamicMeta> => {
   const favicon = globaldata.branding?.favicon
 
   return {
-    siteName: cachedSiteName || 'Webora Estates - Property Management Platform',
+    siteName: cachedSiteName || 'Webora Blog - Content Management Platform',
     siteDescription:
       cachedSiteDescription ||
-      'Enterprise-grade real estate management platform for property listings, tenant management, and portfolio operations.',
+      'Enterprise-grade Blog and Content Management Platform for developers and content creators.',
     favicon:
       favicon && typeof favicon === 'object' && 'url' in favicon && favicon.url
         ? { url: favicon.url }

@@ -1,19 +1,19 @@
 import type { Metadata } from "next";
-
-import { RelatedPosts } from "@/blocks/RelatedPosts/Component";
-import { PayloadRedirects } from "@/components/PayloadRedirects";
-import RichText from "@/components/RichText";
+import { RelatedDocs } from "@blocks/RelatedPosts/Component";
+import { PayloadRedirects } from "@components/PayloadRedirects";
+import RichText from "@components/RichText";
 import configPromise from "@payload-config";
 import { draftMode } from "next/headers";
 import { getPayload } from "payload";
 import React, { cache } from "react";
-
-import type { Post } from "@/payload-types";
-
-import { LivePreviewListener } from "@/components/LivePreviewListener";
-import { PostHero } from "@CMS/_heros/PostHero";
-import { generateMeta } from "@utils/generateMeta";
+import type { Post } from "@payload-types";
+import { LivePreviewListener } from "@components/LivePreviewListener";
+import { PostHero } from "@heros/PostHero";
 import PageClient from "./page.client";
+import { mergeOpenGraph } from "@services/seo/mergeOpenGraph";
+import { getDynamicMeta } from "@data/getDynamicMeta";
+import { getPostBySlug } from "@data/getPost";
+import type { DefaultTypedEditorState } from "@payloadcms/richtext-lexical";
 
 export async function generateStaticParams() {
 	const payload = await getPayload({ config: configPromise });
@@ -45,7 +45,7 @@ export default async function Post({ params: paramsPromise }: Args) {
 	const { isEnabled: draft } = await draftMode();
 	const { slug = "" } = await paramsPromise;
 	const url = "/posts/" + slug;
-	const post = await queryPostBySlug({ slug });
+	const post = await getPostBySlug({ slug });
 
 	if (!post) return <PayloadRedirects url={url} />;
 
@@ -64,16 +64,16 @@ export default async function Post({ params: paramsPromise }: Args) {
 				<div className="container">
 					<RichText
 						className="max-w-[48rem] mx-auto"
-						data={post.content}
+						data={post.content as DefaultTypedEditorState}
 						enableGutter={false}
 					/>
-					{post.relatedPosts && post.relatedPosts.length > 0 && (
-						<RelatedPosts
-							className="mt-12 max-w-[52rem] lg:grid lg:grid-cols-subgrid col-start-1 col-span-3 grid-rows-[2fr]"
-							docs={post.relatedPosts.filter(
-								(post) => typeof post === "object",
-							)}
-						/>
+					{post.relatedDocs && post.relatedDocs.length > 0 && (
+            <RelatedDocs
+              className="mt-12 max-w-[52rem] lg:grid lg:grid-cols-subgrid col-start-1 col-span-3 grid-rows-[2fr]"
+              docs={post.relatedDocs.filter(
+                (post) => typeof post === 'object',
+              )}
+            />
 					)}
 				</div>
 			</div>
@@ -81,32 +81,23 @@ export default async function Post({ params: paramsPromise }: Args) {
 	);
 }
 
-export async function generateMetadata({
-	params: paramsPromise,
-}: Args): Promise<Metadata> {
-	const { slug = "" } = await paramsPromise;
-	const post = await queryPostBySlug({ slug });
+export async function generateMetadata(): Promise<Metadata> {
+  const { siteName, siteDescription } = await getDynamicMeta()
+  const title = `Blog | ${siteName}`
 
-	return generateMeta({ doc: post });
+  return {
+    title,
+    description: siteDescription,
+    openGraph: await mergeOpenGraph(
+      {
+        title,
+        description: siteDescription,
+        url: '/blog',
+      },
+      {
+        siteName,
+        description: siteDescription,
+      },
+    ),
+  }
 }
-
-const queryPostBySlug = cache(async ({ slug }: { slug: string }) => {
-	const { isEnabled: draft } = await draftMode();
-
-	const payload = await getPayload({ config: configPromise });
-
-	const result = await payload.find({
-		collection: "posts",
-		draft,
-		limit: 1,
-		overrideAccess: draft,
-		pagination: false,
-		where: {
-			slug: {
-				equals: slug,
-			},
-		},
-	});
-
-	return result.docs?.[0] || null;
-});

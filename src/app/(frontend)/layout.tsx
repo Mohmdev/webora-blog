@@ -1,59 +1,53 @@
-import type { Metadata } from "next";
+import { getDynamicMeta } from '@data/getDynamicMeta'
+import { getServerSideURL } from '@data/getURL'
+import { Providers } from '@providers'
+import { InitTheme } from '@providers/Theme/InitTheme'
+import { mergeOpenGraph } from '@services/seo/mergeOpenGraph'
+import { cn } from '@utils/ui'
+import { GeistMono } from 'geist/font/mono'
+import { GeistSans } from 'geist/font/sans'
+import type { Metadata } from 'next'
+import React from 'react'
 
-import { cn } from "@utils/ui";
-import { GeistMono } from "geist/font/mono";
-import { GeistSans } from "geist/font/sans";
-import type React from "react";
+import { App } from './App'
+import { NoiseBackground } from './App/noise-background'
 
-import { Footer } from "@CMS/design/Footer/Component";
-import { Header } from "@/Header/Component";
-import { AdminBar } from "@/components/AdminBar";
-import { Providers } from "@/providers";
-import { InitTheme } from "@/providers/Theme/InitTheme";
-import { mergeOpenGraph } from "@utils/mergeOpenGraph";
-import { draftMode } from "next/headers";
-
-import "./globals.css";
-import { getServerSideURL } from "@utils/getURL";
+import '@styles/frontend/globals.css'
+import '@styles/frontend/layout.css'
 
 export default async function RootLayout({
-	children,
+  children,
 }: { children: React.ReactNode }) {
-	const { isEnabled } = await draftMode();
-
-	return (
-		<html
-			className={cn(GeistSans.variable, GeistMono.variable)}
-			lang="en"
-			suppressHydrationWarning
-		>
-			<head>
-				<InitTheme />
-				<link href="/favicon.ico" rel="icon" sizes="32x32" />
-				<link href="/favicon.svg" rel="icon" type="image/svg+xml" />
-			</head>
-			<body>
-				<Providers>
-					<AdminBar
-						adminBarProps={{
-							preview: isEnabled,
-						}}
-					/>
-
-					<Header />
-					{children}
-					<Footer />
-				</Providers>
-			</body>
-		</html>
-	);
+  return (
+    <html
+      className={cn(GeistSans.variable, GeistMono.variable)}
+      lang="en"
+      suppressHydrationWarning
+    >
+      <head>
+        <InitTheme />
+      </head>
+      <body className="relative">
+        <Providers>
+          <App>{children}</App>
+          <NoiseBackground enable size={6.0} opacity={0.045} />
+        </Providers>
+      </body>
+    </html>
+  )
 }
 
-export const metadata: Metadata = {
-	metadataBase: new URL(getServerSideURL()),
-	openGraph: mergeOpenGraph(),
-	twitter: {
-		card: "summary_large_image",
-		creator: "@payloadcms",
-	},
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { siteName, siteDescription, favicon } = await getDynamicMeta()
+
+  return {
+    metadataBase: new URL(getServerSideURL()),
+    title: siteName,
+    description: siteDescription,
+    icons: favicon ? [{ rel: 'icon', url: favicon.url }] : undefined,
+    openGraph: await mergeOpenGraph(undefined, {
+      siteName,
+      description: siteDescription,
+    }),
+  }
+}

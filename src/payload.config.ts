@@ -27,12 +27,12 @@ import { redirectsPluginConfig } from '@services/redirects/config.plugin'
 import { scheduledJobsService } from '@services/scheduled-jobs/config'
 import { searchService } from '@services/search/config.plugin'
 import { seoService } from '@services/seo/config.plugin'
-import { Assets } from '@services/storage/Assets/config.collection'
-import { Media } from '@services/storage/Media/config.collection'
-import { UserPhotos } from '@services/storage/UserPhotos/config.collection'
 import { vercelBlob } from '@services/storage/config.plugin.vercelBlob'
 import { buildConfig } from 'payload'
 import sharp from 'sharp'
+import { Media } from '@CMS/resources/Media/config.collection'
+import { Assets } from '@CMS/resources/Assets/config.collection'
+import { UserPhotos } from '@auth/UserPhotos/config.collection'
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -41,12 +41,14 @@ export default buildConfig({
 	collections: [
 		...collectionGroup('Content', [
 			Pages,
-			Posts, Categories,
-			Tags]),
+			Posts,
+			Categories,
+			Tags,
+		]),
 		...collectionGroup('Resources', [Media, Assets]),
 		...collectionGroup('Accounts', [Users, UserPhotos]),
 	],
-	globals: [...globalGroup('Design', [MainMenu, Footer, GlobalSettings])],
+	globals: [...globalGroup('Design', [MainMenu, Footer]), GlobalSettings],
 	blocks: [
 		CallToActionBlock,
 		BannerBlock,

@@ -9,7 +9,6 @@ export interface QueryResults {
   totalDocs: number
 }
 
-
 export const getPostBySlug = cache(async ({ slug }: { slug: string }) => {
   const { isEnabled: draft } = await draftMode()
 

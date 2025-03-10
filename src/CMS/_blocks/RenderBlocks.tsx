@@ -1,23 +1,28 @@
+import { CallToActionBlock } from '@blocks/CallToAction/Component'
+import { ContentBlock } from '@blocks/Content/Component'
+import { FormBlock } from '@blocks/Form/Component'
+import { MediaBlock } from '@blocks/MediaBlock/Component'
+import type { Config } from '@payload-types'
 import React, { Fragment } from 'react'
+import { BannerBlock } from './Banner/Component'
+import { CodeBlock } from './Code/Component'
+import { ArchiveBlock } from './ArchiveBlock/Component'
 
-import type { Page } from '@/payload-types'
-
-import { ArchiveBlock } from '@/blocks/ArchiveBlock/Component'
-import { CallToActionBlock } from '@/blocks/CallToAction/Component'
-import { ContentBlock } from '@/blocks/Content/Component'
-import { FormBlock } from '@/blocks/Form/Component'
-import { MediaBlock } from '@/blocks/MediaBlock/Component'
+type BlockTypes = Config['blocks']
+type Block = BlockTypes[keyof BlockTypes]
 
 const blockComponents = {
-  archive: ArchiveBlock,
   content: ContentBlock,
   cta: CallToActionBlock,
   formBlock: FormBlock,
   mediaBlock: MediaBlock,
-}
+  banner: BannerBlock,
+  code: CodeBlock,
+  archive: ArchiveBlock,
+} as const
 
 export const RenderBlocks: React.FC<{
-  blocks: Page['layout'][0][]
+  blocks: Block[] | null | undefined
 }> = (props) => {
   const { blocks } = props
 
@@ -35,7 +40,7 @@ export const RenderBlocks: React.FC<{
             if (Block) {
               return (
                 <div className="my-16" key={index}>
-                  {/* @ts-expect-error there may be some mismatch between the expected types here */}
+                  {/* @ts-expect-error: Different block types have different props */}
                   <Block {...block} disableInnerContainer />
                 </div>
               )

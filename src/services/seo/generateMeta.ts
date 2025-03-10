@@ -1,28 +1,16 @@
 import { getDynamicMeta } from '@data/getDynamicMeta'
 import { getServerSideURL } from '@data/getURL'
 import type {
-  Amenity,
-  Availability,
-  Blog,
-  Classification,
-  Contract,
   Page,
-  Project,
-  Property,
+  Post,
 } from '@payload-types'
 import type { Metadata } from 'next'
 import { mergeOpenGraph } from './mergeOpenGraph'
 
 export const generateMeta = async (args: {
   doc:
-    | Partial<Page>
-    | Partial<Blog>
-    | Partial<Property>
-    | Partial<Project>
-    | Partial<Classification>
-    | Partial<Availability>
-    | Partial<Amenity>
-    | Partial<Contract>
+  | Partial<Page>
+  | Partial<Post>
 }): Promise<Metadata> => {
   const { doc } = args || {}
 
@@ -30,9 +18,9 @@ export const generateMeta = async (args: {
 
   const ogImage =
     typeof doc?.meta?.image === 'object' &&
-    doc.meta.image !== null &&
-    'url' in doc.meta.image &&
-    doc.meta.image.url
+      doc.meta.image !== null &&
+      'url' in doc.meta.image &&
+      doc.meta.image.url
       ? `${getServerSideURL()}${doc.meta.image.url}`
       : undefined
 
@@ -66,15 +54,15 @@ export const generateMeta = async (args: {
     }
   }
 
-  if (doc?.slug === 'blog') {
+  if (doc?.slug === 'posts') {
     return {
-      title: `Blog | ${siteName}`,
+      title: `Posts | ${siteName}`,
       description: 'Browse all posts.',
       openGraph: {
         ...openGraphBase,
-        title: `Blog | ${siteName}`,
+        title: `Posts | ${siteName}`,
         description: 'Browse all posts.',
-        url: '/blog',
+        url: '/posts',
       },
     }
   }

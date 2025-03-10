@@ -1,30 +1,38 @@
-import clsx from 'clsx'
+import { Card, type CardPostData } from '@components/Card'
+import RichText from '@components/RichText'
+import type { Post } from '@payload-types'
+import { DefaultTypedEditorState } from '@payloadcms/richtext-lexical'
+import { cn } from '@utils/ui'
 import React from 'react'
-import RichText from '@/components/RichText'
 
-import type { Post } from '@/payload-types'
-
-import { Card } from '../../components/Card'
-import { SerializedEditorState } from '@payloadcms/richtext-lexical/lexical'
-
-export type RelatedPostsProps = {
+export type RelatedDocsProps = {
   className?: string
-  docs?: Post[]
-  introContent?: SerializedEditorState
+  docs?: Post['relatedDocs']
+  introContent?: DefaultTypedEditorState
 }
 
-export const RelatedPosts: React.FC<RelatedPostsProps> = (props) => {
+export const RelatedDocs: React.FC<RelatedDocsProps> = (props) => {
   const { className, docs, introContent } = props
 
   return (
-    <div className={clsx('lg:container', className)}>
+    <div className={cn('lg:container', className)}>
       {introContent && <RichText data={introContent} enableGutter={false} />}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 items-stretch">
         {docs?.map((doc, index) => {
-          if (typeof doc === 'string') return null
+          if (typeof doc === 'number') return null
 
-          return <Card key={index} doc={doc} relationTo="posts" showCategories />
+          const docData = typeof doc.value === 'object' ? doc.value : null
+          if (!docData) return null
+
+          return (
+            <Card
+              key={index}
+              doc={docData as CardPostData}
+              relationTo={doc.relationTo}
+              showCategories
+            />
+          )
         })}
       </div>
     </div>

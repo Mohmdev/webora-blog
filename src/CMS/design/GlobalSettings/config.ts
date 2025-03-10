@@ -22,6 +22,7 @@ export const GlobalSettings: GlobalConfig = {
   admin: {
     livePreview: getGlobalLivePreviewURL('global-settings'),
     preview: getGlobalPreviewURL('global-settings'),
+    group: 'Tools',
   },
   fields: [
     {

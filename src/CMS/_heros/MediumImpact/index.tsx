@@ -1,45 +1,61 @@
 import React from 'react'
+import type { Page } from '@payload-types'
+import { CMSLink } from '@components/CMSLink'
+import { Media } from '@components/Media'
+import RichText from '@components/RichText'
+import { cn } from '@utils/ui'
 
-import type { Page } from '@/payload-types'
-
-import { CMSLink } from '@/components/Link'
-import { Media } from '@/components/Media'
-import RichText from '@/components/RichText'
-
-export const MediumImpactHero: React.FC<Page['hero']> = ({ links, media, richText }) => {
+export const MediumImpactHero: React.FC<Page['hero']> = ({
+  links,
+  media,
+  richText,
+}) => {
   return (
-    <div className="">
-      <div className="container mb-8">
-        {richText && <RichText className="mb-6" data={richText} enableGutter={false} />}
-
-        {Array.isArray(links) && links.length > 0 && (
-          <ul className="flex gap-4">
-            {links.map(({ link }, i) => {
-              return (
-                <li key={i}>
-                  <CMSLink {...link} />
-                </li>
-              )
-            })}
-          </ul>
+    <div
+      className={cn(
+        'flex flex-col container',
+        'size-full min-h-[50vh]',
+        'mt-[calc(var(--base-header-height)_+_2rem)]',
+      )}
+    >
+      <div
+        className={cn(
+          'flex-1 size-full rounded-md border-1 border-border/70',
+          'relative overflow-hidden',
         )}
-      </div>
-      <div className="container ">
-        {media && typeof media === 'object' && (
-          <div>
-            <Media
-              className="-mx-4 md:-mx-8 2xl:-mx-16"
-              imgClassName=""
-              priority
-              resource={media}
-            />
-            {media?.caption && (
-              <div className="mt-3">
-                <RichText data={media.caption} enableGutter={false} />
-              </div>
-            )}
-          </div>
-        )}
+      >
+        <div className="absolute inset-0 z-10 grid items-end justify-start">
+          {richText && (
+            <RichText className="m-6" data={richText} enableGutter={false} />
+          )}
+          {Array.isArray(links) && links.length > 0 && (
+            <ul className="flex gap-4">
+              {links.map(({ link }, i) => {
+                return (
+                  <li key={i}>
+                    <CMSLink {...link} />
+                  </li>
+                )
+              })}
+            </ul>
+          )}
+        </div>
+        <div className="absolute inset-0 z-0 select-none">
+          {media && typeof media === 'object' && (
+            <div>
+              <Media
+                imgClassName="-z-10 object-cover"
+                priority
+                resource={media}
+              />
+              {media?.caption && (
+                <div className="mt-3">
+                  <RichText data={media.caption} enableGutter={false} />
+                </div>
+              )}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   )
