@@ -2,14 +2,8 @@
 
 import { cn } from '@utils/ui'
 import React from 'react'
-import { ResetClassifications } from './classifications/reset'
-import { SeedClassifications } from './classifications/seed'
 import { ResetSiteGeneralData } from './general/reset'
 import { SeedSiteGeneralData } from './general/seed'
-import { ResetProjects } from './projects/reset'
-import { SeedProjects } from './projects/seed'
-import { ResetProperties } from './properties/reset'
-import { SeedProperties } from './properties/seed'
 import { HardResetDatabase } from './reset/hard-reset'
 import { MediaReset } from './reset/media-reset'
 
@@ -49,40 +43,10 @@ export const DbInteractionZone: React.FC = () => {
             <SeedSiteGeneralData />
             <ResetSiteGeneralData />
           </div>
+           <MediaReset className="w-full" />
           <HardResetDatabase className="w-full" />
         </div>
 
-        <div className="flex flex-col justify-start items-start flex-nowrap gap-2 w-full max-w-xl">
-          <h5 className="text-muted-foreground">Real Estate Data Management</h5>
-          <div
-            className={cn(
-              'flex flex-row flex-nowrap gap-4',
-              'justify-between items-center w-full',
-            )}
-          >
-            <SeedClassifications />
-            <ResetClassifications />
-          </div>
-          <div
-            className={cn(
-              'flex flex-row flex-nowrap gap-4',
-              'justify-between items-center w-full',
-            )}
-          >
-            <SeedProperties />
-            <ResetProperties />
-          </div>
-          <div
-            className={cn(
-              'flex flex-row flex-nowrap gap-4',
-              'justify-between items-center w-full',
-            )}
-          >
-            <SeedProjects />
-            <ResetProjects />
-          </div>
-          <MediaReset className="w-full" />
-        </div>
       </div>
     </div>
   )
