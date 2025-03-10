@@ -11,7 +11,7 @@ import React, { cache } from "react";
 import type { Post } from "@/payload-types";
 
 import { LivePreviewListener } from "@/components/LivePreviewListener";
-import { PostHero } from "@/heros/PostHero";
+import { PostHero } from "@CMS/_heros/PostHero";
 import { generateMeta } from "@utils/generateMeta";
 import PageClient from "./page.client";
 

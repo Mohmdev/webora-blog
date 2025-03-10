@@ -1,4 +1,4 @@
-import { Post } from '@/payload-types'
+import type { Blog } from '@payload-types'
 
 /**
  * Formats an array of populatedAuthors from Posts into a prettified string.
@@ -11,14 +11,19 @@ import { Post } from '@/payload-types'
  *
  */
 export const formatAuthors = (
-  authors: NonNullable<NonNullable<Post['populatedAuthors']>[number]>[],
+  authors: NonNullable<NonNullable<Blog['populatedAuthors']>[number]>[],
 ) => {
   // Ensure we don't have any authors without a name
-  const authorNames = authors.map((author) => author.name).filter(Boolean)
+  const filteredAuthors = authors.filter((author) => Boolean(author.username))
 
-  if (authorNames.length === 0) return ''
-  if (authorNames.length === 1) return authorNames[0]
-  if (authorNames.length === 2) return `${authorNames[0]} and ${authorNames[1]}`
+  if (filteredAuthors.length === 0) return ''
 
-  return `${authorNames.slice(0, -1).join(', ')} and ${authorNames[authorNames.length - 1]}`
+  if (filteredAuthors.length === 1) return filteredAuthors[0]?.username
+  if (filteredAuthors.length === 2)
+    return `${filteredAuthors[0]?.username} and ${filteredAuthors[1]?.username}`
+
+  return `${filteredAuthors
+    .slice(0, -1)
+    .map((author) => author.username)
+    .join(', ')} and ${filteredAuthors[authors.length - 1]?.username}`
 }

@@ -4,9 +4,9 @@ import { CollectionArchive } from '@/components/CollectionArchive'
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
 import React from 'react'
-import { Search } from '@/search/Component'
 import PageClient from './page.client'
 import { CardPostData } from '@/components/Card'
+import { SearchInput } from '@services/search/SearchInput/2'
 
 type Args = {
   searchParams: Promise<{
@@ -67,7 +67,7 @@ export default async function Page({ searchParams: searchParamsPromise }: Args) 
           <h1 className="mb-8 lg:mb-16">Search</h1>
 
           <div className="max-w-[50rem] mx-auto">
-            <Search />
+            <SearchInput />
           </div>
         </div>
       </div>

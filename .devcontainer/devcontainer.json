@@ -36,6 +36,7 @@
         "christian-kohler.npm-intellisense",
         "christian-kohler.path-intellisense",
         "YoavBls.pretty-ts-errors",
+        "MylesMurphy.prettify-ts",
         "jakob101.RelativePath",
         "SimonSiefke.svg-preview",
         "bradlc.vscode-tailwindcss",
@@ -58,8 +59,7 @@
         "matt-meyers.vscode-dbml",
         "tomoki1207.pdf",
         "PKief.material-icon-theme",
-        "wix.vscode-import-cost",
-        "yoavbls.pretty-ts-errors"
+        "wix.vscode-import-cost"
       ],
 
       "settings": {

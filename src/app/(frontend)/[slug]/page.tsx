@@ -9,7 +9,7 @@ import React, { cache } from "react";
 
 import { RenderBlocks } from "@/blocks/RenderBlocks";
 import { LivePreviewListener } from "@/components/LivePreviewListener";
-import { RenderHero } from "@/heros/RenderHero";
+import { RenderHero } from "@CMS/_heros/RenderHero";
 import { generateMeta } from "@utils/generateMeta";
 import PageClient from "./page.client";
 
